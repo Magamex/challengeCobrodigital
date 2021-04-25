@@ -10,7 +10,7 @@ Tecnologias utilizadas:
 - DataTables
 
 Editor:
-- VSVODE
+- VSCODE
 - Extension VIM
 
 Vista Previa:
