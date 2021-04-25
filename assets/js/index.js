@@ -14,13 +14,7 @@ const mostrarEstadisticas = () =>{
 
 
 const mostrarAyuda= () =>{
-    var descripcion = `
-        <div class="text-center">
-            <p class="danger">Valores en Rojo son los que fueron rechazados o no fueron acreditados</p>
-            <p class="success">Valores en Verde son los que fueron aceptados</p>
-        </div>
-    `
-    $('#detalles_cuerpo').html(descripcion);
+    $('#detalles_cuerpo').html($('#ayudaContenido').html());
     $('#detalles_modal').modal("show");
 }
 
@@ -131,23 +125,23 @@ const mostrarDatos = () =>{
                                     </tr>
                                     </tr>
                                         <td>Total Registros Cobrados:</td>
-                                        <td>${totalRegistros}</td>
+                                        <td><b>${totalRegistros}</b></td>
                                     </tr>
                                     <tr>
-                                        <td>Total Cobrados:</td>
-                                        <td>${totalCobrado}$</td>
+                                        <td>Importe Total Cobrado:</td>
+                                        <td><b>${totalCobrado}$</b></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="danger">
                                         <td>Promedio Debito:</td>
-                                        <td>${promDebito}$</td>
+                                        <td><b>${promDebito}$</b></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="success">
                                         <td>Promedio Efectivo:</td>
-                                        <td>${promEfectivo}$</td>
+                                        <td><b>${promEfectivo}$</b></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="warning">
                                         <td>Promedio Credito:</td>
-                                        <td>${promCredito}$</td>
+                                        <td><b>${promCredito}$</b></td>
                                     </tr>
                                     </table>`;
         },

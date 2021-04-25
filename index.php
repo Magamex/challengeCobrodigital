@@ -10,12 +10,12 @@
     <title>challengeCobroDigital</title>
 </head>
 <body>
-<div class="container">
-    <div class="col-xs-12 col-md-12 col-lg-12 main-content">
-        <div class="panel panel-default">
-            <div class="panel-body text-center">
+<div class="container-fluid">
+    <div class="row content">
+        <div class="col-sm-12">
+            <div class="text-center">
                 <h2>Procesamiento de Datos</h2>
-                <div>
+                <div class="" style="width:100%">
                     <button class="btn btn-primary" id="btnModal" onclick="mostrarEstadisticas()" disabled>Estadisticas</button>
                     <button class="btn btn-warning" onclick="mostrarAyuda()">Ayuda</button>
                 </div>
@@ -48,6 +48,25 @@
             </div>
         </div>
     </div>
+</div>
+
+<div id="ayudaContenido" hidden>
+    <ul>
+        <li>Dentro de este proyecto se utiliza <b>PHP,Javascript,Jquery,Boostrap,DataTables</b></li>
+        <li>Los archivos para procesar se encuentran en <b>/assets/archivos/</b></li>
+        <li>Son procesados por el archivo <b>/assets/php/acciones.php</b></li>
+        <li>Una vez procesados son enviados como un json</li>
+        <li>En la tabla se visualiza <b>id</b>, <b>nro de transaccion</b>, <b>fecha de pago</b>, <b>metodo de pago</b> y el <b>importe</b></li>
+        <li>El boton <b>estadistica</b> es el que permite ver los valores procesados del <b>punto 3</b></li>
+        <li>Valores en <span class="label label-danger">Rojo</span> son los que fueron <b>rechazados o no fueron acreditados</b></p></li>
+        <li>Valores en <span class="label label-success">Verde</span> son los que fueron <b>aceptados</b></li>
+        <li>Valores <b>procesados</b> son: <ul>
+                <li><span class="label label-primary">Total Registros Cobrados</span></li>
+                <li><span class="label label-primary">Total Importe Cobrado</span></li>
+                <li><span class="label label-primary">Promedio de Transaccion por Forma de Pago</span></li>
+            </ul>
+        </li>
+    </ul>
 </div>
 
 </body>
