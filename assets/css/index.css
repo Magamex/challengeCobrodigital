@@ -1,0 +1,11 @@
+.transDebitado{
+    color:green !important;
+}
+
+.transFallido{
+    color: red !important;
+}
+
+.sorting_1{
+    background-color: #a0a0a0 !important;
+}

@@ -1,14 +1,7 @@
 <?php
 ini_set('memory_limit', '512M');
 
-//Pago Directo
-// $url = "assets/archivos/REND.COB-COBC8496.COB-20191125.TXT";
-// $url = "assets/archivos/REND.REV-REVC8496.REV-20191125.TXT";
-
 $urlArchivos = "../archivos";
-
-//Pago Plus
-// $url = "assets/archivos/888ENTES5723_308.txt";
 
 /**
  * Devuelve todos los archivos disponibles dentro del path
@@ -25,9 +18,8 @@ function archivosDisponibles($path){
 
 /**
  * Convierte en codificacion UTF8
- *
  * @param array $mixed
- * @return void
+ * @return array
  */
 function convertirUTF8($array) {
     if (is_array($array)) {
@@ -101,8 +93,8 @@ function tipoRegistro($codigo,$origen){
     }else{
         //BANCO -> EMPRESA
         $reg = array(
-            '0370' => 'Debitos Efectuados - Rendicion Cobranza',
-            '0360' => 'Debitos Rechazados - Rendicion Cobranza',
+            '0370' => 'Debitos Efectuados',
+            '0360' => 'Debitos Rechazados',
             '0371' => 'Reversion Solicitada en el Banco de la cuenta',
             '0310' => 'Rechazo de reversion solicitada en el banco',
             '0383' => 'Alta de adhesion efectuada en el banco',
@@ -194,16 +186,16 @@ function pagoDirecto($url){
                 $registros['footer']['cantReg'] = substr($linea,39,7);          //!Cantidad Registros
             }else{
                 //Detalles
-                $registros['body'][$indiceDetalle]['tReg'] = substr($linea,0,4);    //*Tipo de Registro
+                $registros['body'][$indiceDetalle]['tReg'] = tipoRegistro(substr($linea,0,4),$registros['header']['origen']);    //*Tipo de Registro
                 $registros['body'][$indiceDetalle]['idCliente'] = trim(substr($linea,4,22));                                     //*Identificador del Cliente
                 $registros['body'][$indiceDetalle]['CBU'] = trim(substr($linea,26,26));                                          //CBU
                 $registros['body'][$indiceDetalle]['refUnivoca'] = trim(substr($linea,52,15));                                   //*Referencia Univoca - tabla
                 $registros['body'][$indiceDetalle]['1erVenc'] = trim(substr($linea,67,8));                                       //1er Vencimiento
-                $registros['body'][$indiceDetalle]['1erImporte'] = trim((string)substr($linea,75,12).','.substr($linea,87,2));   //1er Importe
+                $registros['body'][$indiceDetalle]['1erImporte'] = (float)trim(substr($linea,75,12).'.'.substr($linea,87,2));   //1er Importe
                 $registros['body'][$indiceDetalle]['2doVenc'] = trim(substr($linea,89,8));                                       //2do Vencimiento
-                $registros['body'][$indiceDetalle]['2doImporte'] = trim((string)substr($linea,98,12).','.substr($linea,110,2));  //2do Importe
+                $registros['body'][$indiceDetalle]['2doImporte'] = (float)trim(substr($linea,98,12).'.'.substr($linea,110,2));  //2do Importe
                 $registros['body'][$indiceDetalle]['3erVenc'] = trim(substr($linea,112,8));                                      //3er Vencimiento
-                $registros['body'][$indiceDetalle]['3erImporte'] = trim((string)substr($linea,120,12).','.substr($linea,132,2)); //3er Importe
+                $registros['body'][$indiceDetalle]['3erImporte'] = (float)trim(substr($linea,120,12).'.'.substr($linea,132,2)); //3er Importe
                 $registros['body'][$indiceDetalle]['moneda'] = trim(substr($linea,133,1));                                       //Moneda de Factura
                 $registros['body'][$indiceDetalle]['motivoRechazo'] = trim(substr($linea,134,3));  //Motivo de Rechazo
                 $registros['body'][$indiceDetalle]['tipoDoc'] = trim(substr($linea,137,4));                                      //Tipo Documento
@@ -216,7 +208,7 @@ function pagoDirecto($url){
                 $registros['body'][$indiceDetalle]['mensajeATM'] = trim(substr($linea,244,40));                                  //Mensaje ATM
                 $registros['body'][$indiceDetalle]['concepFact'] = trim(mb_convert_encoding(substr($linea,284,10),'UTF8','UTF8'));                                  //Concepto de Factura
                 $registros['body'][$indiceDetalle]['fechaCobro'] = trim(substr($linea,294,8));                                   //*Fecha de Cobro
-                $registros['body'][$indiceDetalle]['importeCobrado'] = trim(substr($linea,302,12).','.substr($linea,314,2));     //*Importe Cobrado
+                $registros['body'][$indiceDetalle]['importeCobrado'] = (float)trim(substr($linea,302,12).'.'.substr($linea,314,2));     //*Importe Cobrado
                 $registros['body'][$indiceDetalle]['fechaAcred'] = trim(substr($linea,294,8));                                   //Fecha de Acreditamiento
             }
             $indiceDetalle++;
@@ -255,6 +247,11 @@ function tipoMoneda($codigo){
     return (isset($moneda[$codigo]))?$moneda[$codigo]:$codigo;
 }
 
+/**
+ * Devuelve una descripcion de la forma de pago
+ * @param string $codigo
+ * @return string
+ */
 function formaPago($codigo){
     $pago = array(
         '00' => 'Efectivo',
@@ -301,7 +298,7 @@ function pagoPlus($url){
                 $registros['body'][$indiceDetalle]['codOperacion'] = substr($linea,48,2);//Codigo Operacion
                 $registros['body'][$indiceDetalle]['codEnte'] = substr($linea,54,4);    //Codigo Ente
                 $registros['body'][$indiceDetalle]['codServicio'] = trim(substr($linea,58,19));//*Codigo de Servicio/Identificacion - tabla
-                $registros['body'][$indiceDetalle]['importe'] = substr($linea,77,12);   //*Importe de Transaccion - tabla
+                $registros['body'][$indiceDetalle]['importe'] = (float)trim(substr($linea,77,11).".".substr($linea,88,2));   //*Importe de Transaccion - tabla
                 $registros['body'][$indiceDetalle]['moneda'] = substr($linea,110,1);    //0=Pesos 1=Dolares
                 $registros['body'][$indiceDetalle]['codCajero'] = substr($linea,111,4); //Codigo de Cajero
                 $registros['body'][$indiceDetalle]['codSeguridad'] = substr($linea,120,3); //Codigo de Seguridad
@@ -325,25 +322,15 @@ function pagoPlus($url){
     return $registros;
 }
 
-//Pago directo
-// var_dump(json_encode(pagoDirecto($url)));
-// var_dump(pagoDirecto($url));
 
-//Pago Plus
-// var_dump(json_encode(pagoPlus($url)));
-// var_dump(pagoPlus($url));
-
+/**
+ * Main
+ */
 $accion = $_POST['accion'];
 switch ($accion) {
     case 'listarArchivos':
         // $path = $_POST['path'];
         echo json_encode(archivosDisponibles($urlArchivos));
-        break;
-    case 'pagoDirecto':
-        # code...
-        break;
-    case 'pagoPlus':
-        # code...
         break;
     case 'todosArchivos':
         $listArchivos = archivosDisponibles($urlArchivos);
